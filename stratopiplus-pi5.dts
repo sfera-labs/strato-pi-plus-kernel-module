@@ -1,0 +1,52 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2712";
+
+    fragment@0 {
+        target-path = "/";
+        __overlay__ {
+            stratopiplus: stratopiplus {
+                compatible = "sferalabs,stratopiplus";
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&rpi_rtc>;
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@2 {
+        target = <&i2c3>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";
+            clock-frequency = <100000>;
+            pinctrl-0 = <&rp1_i2c3_22_23>;
+
+            rp2: rp2@35 {
+                compatible = "sferalabs,stratopiplus-rp2";
+                reg = <0x35>;
+                status = "okay";
+            };
+
+            pcf2131: pcf2131@53 {
+                compatible = "sferalabs,rtc-pcf2131";
+                reg = <0x53>;
+                status = "okay";
+            };
+
+            atecc608: atecc608@60 {
+                compatible = "sferalabs,atecc";
+                reg = <0x60>;
+                status = "okay";
+            };
+        };
+    };
+};
