@@ -900,7 +900,7 @@ static struct DeviceAttrBean _devAttrBeansCan[] = {
             {
                 .attr =
                     {
-                        .name = "termination",
+                        .name = "termination_config",
                         .mode = 0660,
                     },
                 .show = _devAttrI2c_show,

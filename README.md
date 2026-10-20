@@ -745,11 +745,12 @@ For each detected channel (`<n>` from 1 to 4):
     <!-- ================= -->
     <tbody>
         <tr>
-            <td rowspan=2>termination</td>
-            <td rowspan=2>CAN bus line termination resistor</td>
+            <td rowspan=2>termination_config</td>
+            <td rowspan=2>CAN bus line termination configuration</td>
             <td rowspan=2>
                 <code>R</code>
                 <code>W</code>
+                <code>CR</code>
             </td>
             <td>0</td>
             <td>Disabled (default)</td>
