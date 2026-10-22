@@ -28,6 +28,7 @@
 #include <linux/of_irq.h>
 #include <linux/of_device.h>
 #include <linux/regmap.h>
+#include <linux/version.h>
 #include <linux/watchdog.h>
 
 #include "pcf21xx.h"
@@ -1429,7 +1430,11 @@ static struct i2c_driver pcf2127_i2c_driver = {
 		.name	= "rtc-pcf2127-i2c",
 		.of_match_table = of_match_ptr(pcf2127_of_match),
 	},
-	.probe		= pcf2127_i2c_probe,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)
+    .probe		= pcf2127_i2c_probe,
+#else
+    .probe_new  = pcf2127_i2c_probe,
+#endif
 	.id_table	= pcf2127_i2c_id,
 };
 
