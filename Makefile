@@ -1,6 +1,5 @@
 MODULE_MAIN_OBJ := module.o
-COMMON_MODULES := utils gpio atecc
-MODULE_EXTRA_OBJS := rtc-pcf2131/module.o
+COMMON_MODULES := utils gpio atecc pcf21xx
 UDEV_RULES := 99-stratopiplus.rules
 UDEV_GROUP := stratopiplus
 
