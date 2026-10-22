@@ -25,7 +25,7 @@
 #include "commons/gpio/gpio.h"
 #include "commons/utils/utils.h"
 #include "rp2_i2c.h"
-#include "commons/rtc-pcf21xx/pcf21xx.h"
+#include "commons/pcf21xx/pcf21xx.h"
 
 #define pr_fmt(fmt) "stratopiplus: " fmt
 
