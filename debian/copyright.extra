@@ -1,0 +1,9 @@
+Files: commons/pcf21xx/*
+Copyright: 2013 Til-Technologies
+License: GPL-2.0-only
+ This component is distributed under the terms of version 2 only of the GNU General Public License.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in /usr/share/common-licenses/GPL-2.
+Comment: The source header credits Renaud Cerrato, Bruno Thomsen, Hugo Villeneuve,
+ and Sfera Labs as contributors.
