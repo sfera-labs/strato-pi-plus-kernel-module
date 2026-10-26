@@ -1,93 +1,42 @@
 # Strato Pi Plus driver kernel module
 
-Raspberry Pi OS (Debian) Kernel module for [Strato Pi Plus](https://www.sferalabs.cc/product/strato-pi-plus/).
+Debian-based Linux kernel module for [Strato Pi Plus](https://www.sferalabs.cc/product/strato-pi-plus/).
 
 [![Build tests [stable oldstable]](https://github.com/sfera-labs/strato-pi-plus-kernel-module/actions/workflows/build-apt.yml/badge.svg)](https://github.com/sfera-labs/strato-pi-plus-kernel-module/actions/workflows/build-apt.yml)
 [![Build tests [firmware]](https://github.com/sfera-labs/strato-pi-plus-kernel-module/actions/workflows/build-fw.yml/badge.svg)](https://github.com/sfera-labs/strato-pi-plus-kernel-module/actions/workflows/build-fw.yml)
 
 ## Installation
 
-Make sure your system is updated:
+For source-based installation, see this [installation guide](https://github.com/sfera-labs/sl-kmod-commons/blob/main/INSTALLATION.md).
+
+If the Sfera Labs APT repository is not configured yet, [add the repository and install its keyring](https://github.com/sfera-labs/apt#install).
+
+Install the package:
 
     sudo apt update
-    sudo apt upgrade
+    sudo apt install stratopiplus-dkms
 
-If you are using a **32-bit** OS, add to `/boot/firmware/config.txt` (`/boot/config.txt` in older versions) the following line: [[why?](https://github.com/raspberrypi/firmware/issues/1795)]
+The package registers the module with DKMS, which builds it for kernels with matching headers and rebuilds it when new kernel headers are installed. It also installs the device-tree overlays and udev rules.
 
-    arm_64bit=0
+Select the overlay for your Raspberry Pi by adding this to `/boot/firmware/config.txt`:
 
-Reboot:
+    [pi4]
+    dtoverlay=stratopiplus-pi4
 
-    sudo reboot
+    [pi5]
+    dtoverlay=stratopiplus-pi5
 
-After reboot, install required tools:
+    [all]
 
-    sudo apt install git device-tree-compiler dkms linux-headers-$(uname -r)
+If `config.txt` already contains `dtoverlay=stratopiplus`, remove that line.
 
-Clone this repo:
+On legacy 32-bit Raspberry Pi OS versions that support this option, `arm_64bit=0` may be required. Add it to the same file. [[why?](https://github.com/raspberrypi/firmware/issues/1795)]
 
-    git clone --depth 1 https://github.com/sfera-labs/strato-pi-plus-kernel-module.git
-    
-    cd strato-pi-plus-kernel-module
+The install process creates the `stratopiplus` group and places `99-stratopiplus.rules`, which sets it as the owner group for sysfs entries. To access the sysfs interface without superuser privileges, add your user to the group, e.g. for user "pi":
 
-### Recommended installation mode: DKMS
-
-This is the recommended mode. It automatically rebuilds and reinstalls the module when new kernel versions are installed.
-
-Set the Raspberry Pi target platform (4 or 5) by writing `stratopiplus-pi4` or `stratopiplus-pi5` in a file named `DTS_NAME`:
-
-    echo stratopiplus-pi4 > DTS_NAME
-
-or
-
-    echo stratopiplus-pi5 > DTS_NAME
-
-Register, build and install with DKMS:
-
-    sudo dkms add .
-    sudo dkms build -m $(cat MODULE_NAME) -v $(cat VERSION)
-    sudo dkms install -m $(cat MODULE_NAME) -v $(cat VERSION)
-
-### Alternative installation mode: manual install for running kernel only
-
-<details>
-
-<summary>Show</summary>
-
-Use this only if you specifically want to install for the current running kernel version only.
-
-Set the Raspberry Pi target platform (4 or 5) by writing `stratopiplus-pi4` or `stratopiplus-pi5` in a file named `DTS_NAME`:
-
-    echo stratopiplus-pi4 > DTS_NAME
-
-or
-
-    echo stratopiplus-pi5 > DTS_NAME
-
-Then compile and install:
-
-    make clean
-    make
-    sudo make install
-
-Manual mode does not provide automatic rebuild on kernel upgrades.
-
-</details>
-
-### Enable overlay at boot
-
-Add to `/boot/firmware/config.txt` the following line:
-
-    dtoverlay=stratopiplus
-
-### Optional non-root access to `/sys/class/stratopiplus`
-
-The install process places `99-stratopiplus.rules`, which sets owner group `stratopiplus` for sysfs entries. To access the sysfs interface without superuser privileges, create the group and add your user, e.g. for user "pi":
-
-    sudo groupadd stratopiplus
     sudo usermod -a -G stratopiplus pi
 
-Reboot:
+Finally, reboot to apply the configuration:
 
     sudo reboot
 
